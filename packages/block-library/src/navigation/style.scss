@@ -119,6 +119,7 @@
 		// Don't take up space when the menu is collapsed.
 		width: 0;
 		height: 0;
+		overflow: hidden; // Overflow is necessary to set, otherwise submenu items will take up space.
 
 		// Submenu items.
 		> .wp-block-navigation-item {
@@ -178,6 +179,7 @@
 	// Show submenus on hover unless they open on click.
 	&:where(:not(.open-on-click)):hover > .wp-block-navigation__submenu-container {
 		visibility: visible;
+		overflow: visible;
 		opacity: 1;
 		width: auto;
 		height: auto;
@@ -187,6 +189,7 @@
 	// Keep submenus open when focus is within.
 	&:where(:not(.open-on-click):not(.open-on-hover-click)):focus-within > .wp-block-navigation__submenu-container {
 		visibility: visible;
+		overflow: visible;
 		opacity: 1;
 		width: auto;
 		height: auto;
@@ -196,6 +199,7 @@
 	// Show submenus on click.
 	.wp-block-navigation-submenu__toggle[aria-expanded="true"] + .wp-block-navigation__submenu-container {
 		visibility: visible;
+		overflow: visible;
 		opacity: 1;
 		width: auto;
 		height: auto;
@@ -269,18 +273,22 @@
 // When justified space-between, open submenus leftward for last menu item.
 // When justified right, open all submenus leftwards.
 // This needs high specificity.
-// On smaller breakpoints, menus open downwards.
-@include break-medium {
-	.wp-block-navigation.items-justified-space-between .wp-block-page-list > .has-child:last-child,
-	.wp-block-navigation.items-justified-space-between > .wp-block-navigation__container > .has-child:last-child,
-	.wp-block-navigation.items-justified-right .wp-block-page-list > .has-child,
-	.wp-block-navigation.items-justified-right .wp-block-navigation__container .has-child {
-		// First submenu.
-		.wp-block-navigation__submenu-container {
-			left: auto;
-			right: 0;
+.wp-block-navigation.items-justified-space-between .wp-block-page-list > .has-child:last-child,
+.wp-block-navigation.items-justified-space-between > .wp-block-navigation__container > .has-child:last-child,
+.wp-block-navigation.items-justified-right .wp-block-page-list > .has-child,
+.wp-block-navigation.items-justified-right .wp-block-navigation__container .has-child {
+	// First submenu.
+	.wp-block-navigation__submenu-container {
+		left: auto;
+		right: 0;
 
-			// Nested submenus.
+		// Nested submenus.
+		// On smaller breakpoints, nested menus open downwards.
+		.wp-block-navigation__submenu-container {
+			left: -1px; // Border width.
+			right: -1px;
+		}
+		@include break-medium {
 			.wp-block-navigation__submenu-container {
 				left: auto;
 				right: 100%;
