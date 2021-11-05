@@ -127,10 +127,6 @@
 				display: flex;
 				flex-grow: 1;
 
-				// Without this, the changing to zero on hover-out can cause wrapping and
-				// result in an invinite hover/hover-out loop.
-				white-space: nowrap;
-
 				// Right-align the chevron in submenus.
 				.wp-block-navigation__submenu-icon {
 					margin-right: 0;
@@ -446,7 +442,7 @@
 				display: contents;
 				width: 100%;
 				position: relative;
-				z-index: 2;
+				z-index: auto;
 				background-color: inherit;
 
 				.wp-block-navigation__responsive-container-close {
