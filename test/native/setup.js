@@ -3,6 +3,7 @@
  */
 import 'react-native-gesture-handler/jestSetup';
 import { NativeModules as RNNativeModules } from 'react-native';
+import mockClipboard from '@react-native-clipboard/clipboard/jest/clipboard-mock.js';
 
 RNNativeModules.UIManager = RNNativeModules.UIManager || {};
 RNNativeModules.UIManager.RCTView = RNNativeModules.UIManager.RCTView || {};
@@ -175,11 +176,8 @@ jest.mock(
 		} ) ),
 	} )
 );
-jest.mock( 'react-native/Libraries/Components/Clipboard/Clipboard', () => ( {
-	getString: jest.fn( () => Promise.resolve( '' ) ),
-	setString: jest.fn(),
-} ) );
 
+jest.mock( '@react-native-clipboard/clipboard', () => mockClipboard );
 // Silences the warning: dispatchCommand was called with a ref that isn't a native
 // component. Use React.forwardRef to get access to the underlying native component.
 // This is a known bug of react-native-testing-library package:
