@@ -34,6 +34,7 @@ import {
 	__experimentalToggleGroupControlOption as ToggleGroupControlOption,
 	ToolbarGroup,
 	ToolbarDropdownMenu,
+	Button,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 
@@ -51,6 +52,7 @@ import NavigationMenuNameControl from './navigation-menu-name-control';
 import NavigationMenuPublishButton from './navigation-menu-publish-button';
 import UnsavedInnerBlocks from './unsaved-inner-blocks';
 import NavigationMenuDeleteControl from './navigation-menu-delete-control';
+import OverlayMenuIcon from './overlay-menu-icon';
 
 function getComputedStyle( node ) {
 	return node.ownerDocument.defaultView.getComputedStyle( node );
@@ -104,10 +106,12 @@ function Navigation( {
 } ) {
 	const {
 		itemsJustification,
+		label,
 		openSubmenusOnClick,
 		orientation,
 		overlayMenu,
 		showSubmenuIcon,
+		useIcon,
 	} = attributes;
 
 	const [ areaMenu, setAreaMenu ] = useEntityProp(
@@ -166,6 +170,8 @@ function Navigation( {
 	const [ isResponsiveMenuOpen, setResponsiveMenuVisibility ] = useState(
 		false
 	);
+
+	const [ overlayMenuPreview, setOverlayMenuPreview ] = useState( false );
 
 	const {
 		isNavigationMenuResolved,
@@ -299,6 +305,13 @@ function Navigation( {
 		? CustomPlaceholder
 		: Placeholder;
 
+	const isResponsive = 'never' !== overlayMenu;
+
+	const overlayMenuPreviewClasses = classnames(
+		'wp-block-navigation__overlay-menu-preview',
+		{ open: overlayMenuPreview }
+	);
+
 	return (
 		<EntityProvider
 			kind="postType"
@@ -346,6 +359,33 @@ function Navigation( {
 					{ hasSubmenuIndicatorSetting && (
 						<PanelBody title={ __( 'Display' ) }>
 							<h3>{ __( 'Overlay Menu' ) }</h3>
+							{ isResponsive && (
+								<Button
+									className={ overlayMenuPreviewClasses }
+									onClick={ () => {
+										setOverlayMenuPreview(
+											! overlayMenuPreview
+										);
+									} }
+								>
+									{ useIcon && <OverlayMenuIcon /> }
+									{ ! useIcon && (
+										<span>{ __( 'Menu' ) }</span>
+									) }
+								</Button>
+							) }
+							{ overlayMenuPreview && (
+								<ToggleControl
+									label={ __( 'Show icon button' ) }
+									help={ __(
+										'Configure the visual appearance of the button opening the overlay menu.'
+									) }
+									onChange={ ( value ) =>
+										setAttributes( { useIcon: value } )
+									}
+									checked={ useIcon }
+								/>
+							) }
 							<ToggleGroupControl
 								label={ __( 'Configure overlay menu' ) }
 								value={ overlayMenu }
@@ -479,8 +519,13 @@ function Navigation( {
 						<ResponsiveWrapper
 							id={ clientId }
 							onToggle={ setResponsiveMenuVisibility }
+							onLabelChange={ ( value ) =>
+								setAttributes( { label: value } )
+							}
+							label={ label }
+							useIcon={ useIcon }
 							isOpen={ isResponsiveMenuOpen }
-							isResponsive={ 'never' !== overlayMenu }
+							isResponsive={ isResponsive }
 							isHiddenByDefault={ 'always' === overlayMenu }
 						>
 							{ isEntityAvailable && (

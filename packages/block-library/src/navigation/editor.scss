@@ -569,3 +569,15 @@ body.editor-styles-wrapper
 	justify-content: center;
 	margin-bottom: $grid-unit-20;
 }
+
+.wp-block-navigation__overlay-menu-preview {
+	display: flex;
+	align-items: center;
+	width: 100%;
+	background-color: $gray-200;
+	padding: 3rem 2rem;
+	margin-bottom: 1rem;
+	&.open {
+		background-color: $white;
+	}
+}
